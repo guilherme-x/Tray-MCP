@@ -1,0 +1,63 @@
+{
+  "name": "tray-mcp-server",
+  "version": "1.1.0",
+  "description": "A Model Context Protocol (MCP) server that provides tools to interact with Tray.io's integration platform API, including comprehensive workflow migration capabilities",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "tray-mcp-server": "dist/index.js"
+  },
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js",
+    "setup": "node dist/setup.js",
+    "postinstall": "node dist/setup.js --auto-setup || echo 'Setup can be run manually with: npm run setup'",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "tray",
+    "tray.io",
+    "integration",
+    "api",
+    "automation",
+    "workflow",
+    "workflow-migration",
+    "workflow-export",
+    "workflow-analysis",
+    "connector",
+    "migration",
+    "elixir-migration",
+    "python-migration",
+    "dependency-analysis"
+  ],
+  "author": "Gui Xavier <guilherme.xavierxs@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/guilherme-x/tray-mcp-server.git"
+  },
+  "homepage": "https://github.com/guilherme-x/tray-mcp-server#readme",
+  "bugs": {
+    "url": "https://github.com/guilherme-x/tray-mcp-server/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "zod": "^3.25.56"
+  }
+}
