@@ -499,5 +499,5 @@ MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Support
 
-For issues related to this MCP server, please open an issue on GitHub.
+For issues related to this MCP server, please open an issue on [GitHub](https://github.com/guilherme-x/tray-mcp-server/issues).
 For Tray.io API questions, please refer to their [official documentation](https://tray.io/documentation/).
