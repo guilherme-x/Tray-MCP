@@ -39,7 +39,7 @@
     "python-migration",
     "dependency-analysis"
   ],
-  "author": "Gui Xavier <guilherme.xavierxs@gmail.com>",
+  "author": "Guilherme Xavier <guilherme.xavierxs@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
