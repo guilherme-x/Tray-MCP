@@ -38,13 +38,29 @@ async function loadConfiguration(): Promise<TrayConfig> {
     // Config doesn't exist or is invalid, fall back to environment variables
   }
   
-  // Fall back to environment variables
-  return {
-    masterToken: process.env.TRAY_MASTER_TOKEN,
+  // Fall back to environment variables (supporting both old and new token names)
+  const config: TrayConfig = {
+    masterToken: process.env.TRAY_MASTER_TOKEN || process.env.TRAY_TOKEN_US || process.env.TRAY_TOKEN_EU || process.env.TRAY_TOKEN_APAC,
     userToken: process.env.TRAY_USER_TOKEN,
     region: (process.env.TRAY_REGION as 'us' | 'eu' | 'apac') || 'us',
     workspaceId: process.env.TRAY_WORKSPACE_ID
   };
+  
+  // If no master token found, try region-specific tokens
+  if (!config.masterToken) {
+    if (process.env.TRAY_TOKEN_US) {
+      config.masterToken = process.env.TRAY_TOKEN_US;
+      config.region = 'us';
+    } else if (process.env.TRAY_TOKEN_EU) {
+      config.masterToken = process.env.TRAY_TOKEN_EU;
+      config.region = 'eu';
+    } else if (process.env.TRAY_TOKEN_APAC) {
+      config.masterToken = process.env.TRAY_TOKEN_APAC;
+      config.region = 'apac';
+    }
+  }
+  
+  return config;
 }
 
 // Check for command line arguments
@@ -70,10 +86,21 @@ Options:
 Configuration:
   Tokens can be configured via:
   1. Interactive setup: tray-mcp-server --setup
-  2. Environment variables: TRAY_MASTER_TOKEN, TRAY_USER_TOKEN, TRAY_REGION, TRAY_WORKSPACE_ID
+  2. Environment variables: TRAY_TOKEN_US, TRAY_TOKEN_EU, TRAY_TOKEN_APAC
   3. Configuration file: ~/.config/tray-mcp-server/config.json
 
-For more information, visit: https://github.com/yourusername/tray-mcp-server
+For Claude Desktop MCP configuration:
+  {
+    "tray-mcp-server": {
+      "command": "npx",
+      "args": ["tray-mcp-server"],
+      "env": {
+        "TRAY_TOKEN_US": "your-us-token-here"
+      }
+    }
+  }
+
+For more information, visit: https://github.com/guilherme-x/tray-mcp-server
 `);
     return true; // Exit after help
   }
@@ -1903,14 +1930,20 @@ async function main() {
 
 To use the Tray MCP Server, you need to configure your API tokens.
 
-Run the interactive setup:
-  tray-mcp-server --setup
+Quick setup options:
+1. Run interactive setup:
+   tray-mcp-server --setup
 
-Or set environment variables:
-  export TRAY_MASTER_TOKEN="your_master_token"
-  export TRAY_USER_TOKEN="your_user_token"
+2. Set environment variables in your MCP config:
+   "env": {
+     "TRAY_TOKEN_US": "your_master_token_here"
+   }
 
-For more information: https://github.com/yourusername/tray-mcp-server
+3. Or install globally and run setup:
+   npm install -g tray-mcp-server
+   tray-mcp-server --setup
+
+For more information: https://github.com/guilherme-x/tray-mcp-server
 `);
       process.exit(1);
     }

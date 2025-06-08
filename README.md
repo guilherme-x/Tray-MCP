@@ -128,12 +128,62 @@ Add the following to your Claude Desktop configuration file:
 
 **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
 **Windows**: `%APPDATA%/Claude/claude_desktop_config.json`
+**Linux**: `~/.config/Claude/claude_desktop_config.json`
+
+**⚠️ Important**: Use `npx` to avoid "spawn ENOENT" errors:
 
 ```json
 {
-  "mcpServers": {
-    "tray-mcp-server": {
-      "command": "tray-mcp-server"
+  "mcp": {
+    "servers": {
+      "tray-mcp-server": {
+        "command": "npx",
+        "args": ["tray-mcp-server"],
+        "env": {
+          "TRAY_TOKEN_US": "your-us-token-here"
+        }
+      }
+    }
+  }
+}
+```
+
+#### Multi-Region Configuration
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "tray-mcp-server": {
+        "command": "npx",
+        "args": ["tray-mcp-server"],
+        "env": {
+          "TRAY_TOKEN_US": "your-us-token-here",
+          "TRAY_TOKEN_EU": "your-eu-token-here",
+          "TRAY_TOKEN_APAC": "your-apac-token-here"
+        }
+      }
+    }
+  }
+}
+```
+
+#### Alternative: Global Installation
+
+```bash
+npm install -g tray-mcp-server
+tray-mcp-server --setup
+```
+
+Then use in Claude Desktop config:
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "tray-mcp-server": {
+        "command": "tray-mcp-server"
+      }
     }
   }
 }
