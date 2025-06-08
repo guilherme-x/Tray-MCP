@@ -28,6 +28,21 @@ To avoid "ENOENT" errors, always use `npx` in your configuration:
 }
 ```
 
+**For VS Code MCP Extension:**
+```json
+{
+  "mcpServers": {
+    "tray-mcp-server": {
+      "command": "npx",
+      "args": ["tray-mcp-server"],
+      "env": {
+        "TRAY_TOKEN_US": "your-us-token-here"
+      }
+    }
+  }
+}
+```
+
 ## Multi-Region Configuration
 
 If you work with multiple Tray regions:

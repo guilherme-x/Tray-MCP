@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "tray-mcp-server": {
+      "command": "npx",
+      "args": ["tray-mcp-server"],
+      "env": {
+        "TRAY_TOKEN_US": "your-token-here"
+      }
+    }
+  }
+}

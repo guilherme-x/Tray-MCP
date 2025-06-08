@@ -198,9 +198,12 @@ function printUsageInstructions(config: TrayTokenConfig) {
     console.log('Add this to your Claude Desktop MCP settings:');
     console.log('');
     console.log(colorize(JSON.stringify({
-      "mcpServers": {
-        "tray": {
-          "command": "tray-mcp-server"
+      "mcp": {
+        "servers": {
+          "tray-mcp-server": {
+            "command": "npx",
+            "args": ["tray-mcp-server"]
+          }
         }
       }
     }, null, 2), 'cyan'));
@@ -234,8 +237,8 @@ function printUsageInstructions(config: TrayTokenConfig) {
   }
   
   console.log('');
-  console.log(colorize('📖 Documentation:', 'blue') + ' https://github.com/yourusername/tray-mcp-server');
-  console.log(colorize('🆘 Support:', 'blue') + ' https://github.com/yourusername/tray-mcp-server/issues');
+  console.log(colorize('📖 Documentation:', 'blue') + ' https://github.com/guilherme-x/tray-mcp-server');
+  console.log(colorize('🆘 Support:', 'blue') + ' https://github.com/guilherme-x/tray-mcp-server/issues');
 }
 
 async function checkExistingConfig(): Promise<boolean> {
@@ -261,7 +264,7 @@ async function main() {
     const isAutoSetup = args.includes('--auto-setup');
     
     if (isAutoSetup) {
-      // Auto-setup mode for postinstall - check if config exists, if not, show brief info
+      // Auto-setup mode for postinstall - check if config exists, if not, run setup
       const existing = await loadExistingConfig();
       
       if (existing.masterToken || existing.userToken) {
@@ -270,14 +273,30 @@ async function main() {
         return;
       } else {
         console.log(colorize('\n🔧 Tray MCP Server installed successfully!', 'cyan'));
-        console.log(colorize('To get started, configure your API tokens:', 'white'));
+        console.log(colorize('Let\'s configure your API tokens now...', 'white'));
         console.log('');
-        console.log(colorize('Interactive setup:', 'yellow') + ' ' + colorize('tray-mcp-server --setup', 'cyan'));
-        console.log(colorize('Or set environment variables:', 'yellow'));
-        console.log('  export TRAY_MASTER_TOKEN="your_token"');
-        console.log('  export TRAY_USER_TOKEN="your_token"');
-        console.log('');
-        console.log(colorize('Documentation:', 'blue') + ' https://github.com/yourusername/tray-mcp-server');
+        
+        // Initialize readline for auto-setup too
+        if (!rl) {
+          rl = createInterface({
+            input: process.stdin,
+            output: process.stdout
+          });
+        }
+        
+        printTokenInfo();
+        
+        const config = await promptForTokens();
+        
+        if (config.masterToken || config.userToken) {
+          await saveConfig(config);
+          printUsageInstructions(config);
+        } else {
+          console.log(colorize('\n⚠️  No tokens were provided.', 'yellow'));
+          console.log('You can configure tokens later with: ' + colorize('tray-mcp-server --setup', 'cyan'));
+          console.log('Or set environment variables:');
+          console.log('  export TRAY_TOKEN_US="your_token"');
+        }
         return;
       }
     }
